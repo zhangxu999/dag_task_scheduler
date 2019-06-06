@@ -6,8 +6,23 @@
 
 
 运行方法:
+1. 在本机启动redis.
+2. 启动docker镜像.
 docker 镜像:
 ```
-docker pull 
+docker pull zhangxudedocker/dag_task_scheduler:0.2
+docker run -d -name task_scheduler --network="host" -v /<your_sqlite_path>/data:/data zhangxudedocker/dag_task_scheduler:0.2
 ```
-可以使用docker镜像运行
+注意修改run.sh 中graph.sqlite的地址,确保数据库文件能正确挂载.
+
+运行superset 状态监控可视化web页面.
+     
+为了方便监控任务分布图中任务队列的长度,我们采用superset 开发监控的dashboard.界面效果如下:
+
+可以查看任务队列长度, 任务关系拓扑图结构.
+
+superset web界面docker镜像运行方法
+```
+docker pull zhangxudedocker/supersetdash:0.1
+docker run -d -name dash --network="host" -v /<your_sqlite_path>/graph.sqlite:/home/superset/graph.sqlite/graph.sqlite -p 8088:8088 zhangxudedocker/supersetdash:0.1
+```
