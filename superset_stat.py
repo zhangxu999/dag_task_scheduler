@@ -1,77 +1,106 @@
 import datetime
 import time
+from collections import Counter
+from functools import reduce
+import copy
+import logging.config
+import json
+import traceback
 from sqlalchemy import create_engine, MetaData, select, \
     String, Integer, BigInteger, Table, Column, func, text, and_, or_, desc
+from utils import load_graph, load_redis
 
-import redis
-postgres_url = "postgresql+psycopg2://dbuser:password@127.0.0.1:5432/exampledb"
+with open("logging.json") as f:
+    config = json.load(f)
 
-engine = create_engine(postgres_url)
+logging.config.dictConfig(config)
+logger = logging.getLogger(__name__)
+
+
+sqlite_url = "sqlite:///data/graph.sqlite"
+engine = create_engine(sqlite_url)
 
 redis_queue_length = Table('redis_queue_length', MetaData(), autoload=True, autoload_with=engine)
+graph_table = Table('graph_info', MetaData(), autoload=True, autoload_with=engine)
 
-r1 = redis.StrictRedis(host='localhost', port=6379, db=1, charset="utf-8", decode_responses=True)
+queue_redis = load_redis("queue_redis")
+stat_redis = load_redis("stat_redis")
+
 data_insert_base = {
     'dag': 'dag1',
     'update_flag': None,
-
 }
 insert_sql = redis_queue_length.insert()
-
-from utils import load_graph, load_node
-
-# dag = load_graph("1")
-#
-# def get_pods(node_id):
-#     node = load_node(node_id)
-#     pods_order = node.get('pods_order')
-#     return [ node_id+','+k for k in pods_order]
-#
-# def get_all_nodes(node_id):
-#     node = dag.get('graph').get(node_id)
-#     downstreams = node.get('downstreams')
-#     pods = get_pods(node_id)
-#
-#     if downstreams:
-#         for k, v in downstreams.items():
-#             pods +
-#     else
-#         return []
-#
-# def read_all_queue():
+insert__graph = graph_table.insert()
 
 
+def update_graph():
+    update_graph_flag = stat_redis.get("update_graph_flag")
+    if not update_graph_flag:
+        return
+    dag = load_graph("1").get("graph")
+    data_insert = []
+    now = datetime.datetime.now()
+    print("update_graph_flag")
+
+    template = {"graph": "dag1", "source": 0, 'target': 0, "value": 1, "update_flag": now}
+
+    for k, v in dag.items():
+        down = v.get('downstreams')
+        if not down:
+            continue
+        if isinstance(down, str):
+            edge = copy.copy(template)
+            edge.update({"source": k, "target": down})
+            data_insert.append(edge)
+        else:
+            result = Counter(reduce(lambda x, y: x + y, down.values()))
+            for a, b in result.items():
+                edge = copy.copy(template)
+                edge.update({"source": k, "target": a, "value": b})
+                data_insert.append(edge)
+    try:
+        with engine.connect() as conn:
+            conn.execute(insert__graph, data_insert)
+            stat_redis.delete("update_graph_flag")
+    except Exception as e:
+        tb = traceback.format_exc()
+        logger.error(tb)
+
+    return True
 
 
-all_queue = [
-    '1,1',
-    '1,2',
-    '1,3',
-    '2,1',
-    '2,2',
-    '2,3',
-    '3,1',
-    '3,2',
-    '3,3',
-    '4,1',
-    '4,2',
-    '4,3'
-]
-import random
-flag = True
-while True:
+def update_queue():
+    all_queue = queue_redis.keys("node_*")
+    if not all_queue:
+        return
+    print(all_queue)
     now = datetime.datetime.now()
     data_insert_list = []
     for k in all_queue:
-        data_insert = {'thread_pod': k,
-                       'length': random.randint(10,30),
-                       'node': k.split(',')[0],
+        data_insert = {
+                       'length': queue_redis.llen(k),
+                       'node': k,
                        'update_flag': now,
                        'dag': 'dag1'
                        }
         data_insert_list.append(data_insert)
     with engine.connect() as conn:
         conn.execute(insert_sql, data_insert_list)
-    time.sleep(0.001)
+        logger.debug("insert one batch")
+
+    return True
+
+while True:
+    time.sleep(5)
+    update_queue()
+    update_graph()
+
+
+
+
+
+
+
 
 

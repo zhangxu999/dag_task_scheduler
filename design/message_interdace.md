@@ -11,7 +11,7 @@
 ``` json
 {
   "task_id":123454432,
-  "pod_id":765423,
+  "node_id":765423,
   "result": "done/exception",
   ""
 }
@@ -20,7 +20,7 @@
 ``` json
  {
   "task_id":123454432,
-  "pod_id":765423,
+  "node_id":765423,
   "result": "success",
   "option": "1/2/3/exception"
   ""

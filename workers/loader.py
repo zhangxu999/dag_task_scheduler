@@ -70,6 +70,6 @@ class dl5(DataLoader):
     def run(self, task_id):
         time.sleep(4)
         logger.info("%s  --- %s", self.__class__, task_id)
-        seed = self.r.hget('seed', 'seed4')
+        seed = self.r.hget('seed', 'seed4') or 0
         seed = int(seed) + 5
         self.r.hmset('seed', {"seed5": seed})

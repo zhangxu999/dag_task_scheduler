@@ -3,19 +3,46 @@
     "id": "1",
     "name": "node1",
     "upstreams":[],
-    "operators":["5","1","2","3","4"]
+    "operators":["1","3","4"],
+    "exception_handler": "exceptions.default_node_exception"
   },
   {
     "id": "2",
     "name": "node2",
     "operators":["1","2","3","4","6"]
   },
-    {
+  {
     "id": "3",
-    "name": "node2",
-      "operators":["1","2","3","4"]
-
+    "name": "node3",
+    "upstreams":[],
+    "operators":["2","5","3"]
+  },
+  {
+    "id": "4",
+    "name": "node4",
+    "upstreams":[],
+    "operators":["5","2"]
+  },
+  {
+    "id": "5",
+    "name": "node4",
+    "upstreams":[],
+    "operators":["2"]
+  },
+  {
+    "id": "6",
+    "name": "node4",
+    "upstreams":[],
+    "operators":["2"]
+  },
+  {
+    "id": "7",
+    "name": "node7",
+    "upstreams":[],
+    "operators":["2"]
   }
+
+
 
 ]
 

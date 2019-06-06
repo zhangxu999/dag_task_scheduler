@@ -15,7 +15,7 @@
     "id": "3",
     "type": "data_loader",
         "name": "load1",
-    "worker_class": "loader.dl3"
+    "worker_class": "loader.dl5"
   },
   {
   "id": "4",
@@ -25,15 +25,15 @@
   "selector_option": []
 },
     {
-    "id": "5",
-    "type": "data_loader",
+      "id": "5",
+      "type": "data_loader",
       "name": "StartTiming",
-    "worker_class": "loader.StartTiming"
+      "worker_class": "loader.StartTiming"
   },
   {
     "id": "6",
     "type": "data_loader",
-        "name": "EndTiming",
+    "name": "EndTiming",
     "worker_class": "loader.EndTiming"
   }
 ]

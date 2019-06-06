@@ -1,19 +1,94 @@
 [
 {
   "id": "1",
+  "desc": "basic",
   "name": "dag1",
-  "root_node": "1",
+  "root_node": "3",
   "graph":
   {
     "1": {
       "downstreams":
       {
         "2": ["2"],
-        "3": ["3"]
+        "4": ["4"]
       }
     },
+    "3": {
+      "downstreams": "1"
+    },
     "2": {
+    },
+    "5": {
+            "downstreams": "7"
+    },
+    "6": {
+    },
+    "7": {
+    },
+
+    "4": {
+      "downstreams":
+      {
+        "2": ["5"],
+        "4": ["6"]
+      }
+    }
+  }
+},
+  {
+    "id": "2",
+    "desc": "multi_upstreams",
+    "name": "dag2",
+    "root_node": "3",
+    "graph":
+  {
+    "1": {
+      "downstreams":
+      {
+        "2": ["2"],
+        "4": ["4"]
+      }
+    },
+    "3": {
+      "downstreams": "1"
+    },
+    "2": {
+    },
+    "4": {
+      "downstreams":
+      {
+        "2": ["2"],
+        "4": ["4"]
+      }
+    }
+  }
+},
+{
+  "id": "3",
+  "name": "dag3",
+  "desc": "exceptions",
+  "root_node": "3",
+  "graph":
+  {
+    "1": {
+      "downstreams":
+      {
+        "2": ["2"],
+        "4": ["4"]
+      }
+    },
+    "3": {
+      "downstreams": "1"
+    },
+    "2": {
+    },
+    "4": {
+      "downstreams":
+      {
+        "2": ["2"],
+        "4": ["4"]
+      }
     }
   }
 }
-  ]
+]

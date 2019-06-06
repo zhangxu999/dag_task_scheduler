@@ -22,7 +22,7 @@ class da2(DecisionMaker):
 class da3(DecisionMaker):
 
     def run(self, task_id):
-        if len(task_id)>3:
+        if len(task_id)> 3:
             return '1'
         else:
             return '2'
