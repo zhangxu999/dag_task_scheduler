@@ -18,7 +18,7 @@ docker run -d -name task_scheduler --network="host" -v /<your_sqlite_path>/data:
 运行superset 状态监控可视化web页面.
      
 为了方便监控任务分布图中任务队列的长度,我们采用superset 开发监控的dashboard.界面效果如下:
-
+![image](https://github.com/zhangxu999/dag_task_scheduler/blob/master/design/dash.png)
 可以查看任务队列长度, 任务关系拓扑图结构.
 
 superset web界面docker镜像运行方法
