@@ -19,7 +19,7 @@ docker 镜像:
 docker pull zhangxudedocker/dag_task_scheduler:0.2
 docker run -d -name task_scheduler --network="host" -v /<your_sqlite_path>/data:/data zhangxudedocker/dag_task_scheduler:0.2
 ```
-注意修改run.sh 中graph.sqlite的地址,确保数据库文件能正确挂载.
+注意修改run.sh 中<your_sqlite_path>/data的地址(data文件夹下有sqlite数据库文件和log日志),确保数据库文件和日志能正确挂载.
 
 运行superset 状态监控可视化web页面.
      
