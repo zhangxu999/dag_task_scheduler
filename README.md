@@ -32,3 +32,4 @@ superset web界面docker镜像运行方法
 docker pull zhangxudedocker/supersetdash:0.1
 docker run -d -name dash --network="host" -v /<your_sqlite_path>/graph.sqlite:/home/superset/graph.sqlite/graph.sqlite -p 8088:8088 zhangxudedocker/supersetdash:0.1
 ```
+PS:  一个成熟高可用的项目需要花费大量的经历修改项目。本项目因为时间仓促，想先实现一个项目的原型，一些代码的质量和实现并不是很好，请见谅。欢迎提出修改意见。
