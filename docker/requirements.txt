@@ -1,4 +1,4 @@
-redis==2.10.6
+redis==4.5.3
 pandas==0.23.4
 numpy==1.15.2
 SQLAlchemy==1.2.12
